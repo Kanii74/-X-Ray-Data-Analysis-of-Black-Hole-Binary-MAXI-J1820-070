@@ -1,7 +1,7 @@
 # X-Ray Data Analysis of Black Hole Binary MAXI J1820+070
 
 This repository contains the analysis performed for a set of **X-ray astronomy laboratory exercises** using observations of the black hole binary **MAXI J1820+070**.  
-The work was carried out as part of the **MS/DD (Astronomy) laboratory coursework at the Indian Institute of Space Science and Technology (IIST)**.
+The work was carried out as part of the **MS/DD (Astronomy) laboratory coursework at the Indian Institute of Space Science and Technology (IIST)**, and supervides by Dr. Samir Mandal.
 
 The labs introduce the standard workflow used in **high-energy astrophysics data analysis**, including:
 
