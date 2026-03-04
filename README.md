@@ -1,149 +1,380 @@
 # X-Ray Data Analysis of Black Hole Binary MAXI J1820+070
 
-This repository contains the analysis performed for an **X-ray astronomy laboratory exercise** focused on timing studies of the black hole binary **MAXI J1820+070**.
+This repository contains the analysis performed for a set of **X-ray astronomy laboratory exercises** using observations of the black hole binary **MAXI J1820+070**.  
+The work was carried out as part of the **MS/DD (Astronomy) laboratory coursework at the Indian Institute of Space Science and Technology (IIST)**.
 
-The work was carried out as part of the **MS/DD (Astronomy) laboratory coursework at the Indian Institute of Space Science and Technology (IIST)**. The lab introduces the basic workflow used in **high-energy astrophysics data analysis**, including light curve generation and timing analysis using Fourier techniques.
+The labs introduce the standard workflow used in **high-energy astrophysics data analysis**, including:
+
+- NICER data reduction
+- X-ray spectral analysis
+- X-ray timing analysis
+
+The analysis uses observations from the **NICER (Neutron Star Interior Composition Explorer)** instrument onboard the **International Space Station**.
 
 ---
 
-# Objective
+# Scientific Background
 
-The goal of this lab was to study **time variability in X-ray observations** of the black hole binary MAXI J1820+070.
+**MAXI J1820+070** is a well-known **black hole X-ray binary**.  
+In such systems, matter from a companion star accretes onto a black hole, producing strong X-ray emission.
 
-The analysis focuses on answering the following questions:
+Studying the X-ray spectrum and variability of these systems provides insights into:
 
-- Is there **time variability** present in the data?
-- What is the **timescale of variability**?
-- How can the variability be **characterized using power spectral analysis**?
+- accretion disk physics
+- corona emission
+- quasi-periodic oscillations (QPOs)
+- relativistic processes near black holes
+
+---
+
+# Instrument: NICER
+
+The **Neutron Star Interior Composition Explorer (NICER)** is an X-ray timing instrument installed on the **International Space Station**.
+
+Key features:
+
+- 56 X-ray concentrator optics (XRC)
+- 56 focal plane modules (FPMs)
+- operating energy range: **0.2 – 12 keV**
+- high time resolution for timing studies
+
+Several detectors are known to be inactive or noisy, so they are removed during data reduction.
 
 ---
 
 # Dataset
 
-The data used in this analysis corresponds to **X-ray observations of MAXI J1820+070** obtained using the **NICER X-ray telescope** onboard the **International Space Station**.
+The analysis uses a NICER observation of **MAXI J1820+070** with observation ID:
 
-The dataset contains **light curve data** representing the X-ray count rate as a function of time.
+```
+1200120189
+```
 
----
+The repository contains the processed data products required for spectral and timing analysis.
 
-# Analysis Workflow
+## Data Files
 
-The analysis follows the standard workflow used in **X-ray timing studies**.
+### Source Spectrum
+```
+NICER_1200120189_nisrc_grp.pha
+nicer-final-New.pha
+```
 
-## 1. Light Curve Generation
-
-The light curve of the source was generated using the `lcurve` tool.
-
-This produces a **time series of X-ray count rate versus time**, which allows visual inspection of variability in the source.
-
-Key steps included:
-
-- Selecting the light curve file
-- Choosing an appropriate **time bin**
-- Plotting the light curve using the **PGPLOT interface**
-- Saving the resulting data for further analysis
-
-From the generated light curve, the following quantities were examined:
-
-- Maximum count rate
-- Minimum count rate
-- Average count rate
-
-These provide a first indication of variability in the source.
+These files contain the **grouped source spectrum** used for spectral fitting.
 
 ---
 
-## 2. Power Density Spectrum (PDS)
+### Background Spectrum
+```
+NICER_1200120189_nibackgen3C50_bkg.pi
+```
 
-To study variability in the **frequency domain**, a **Power Density Spectrum (PDS)** was generated using the `powspec` tool.
-
-The PDS is obtained by computing the **Fourier transform of the light curve**, which converts the time series into **power as a function of frequency**. :contentReference[oaicite:0]{index=0}
-
-This helps identify characteristic frequencies in the variability of the source.
-
-The analysis included:
-
-- Choosing an appropriate **time bin**
-- Selecting the number of **new bins per interval**
-- Generating and plotting the **power spectrum**
-
-Different **rebinning strategies** were tested to study how binning affects the resulting power spectrum.
+This file contains the **background spectrum** generated using the NICER background model.
 
 ---
 
-## 3. Effect of Time Binning
+### Instrument Response Files
 
-Two different time binning choices were tested:
+These files describe the response of the detector.
 
-- **Minimum possible bin time**
-- **Ten times the minimum bin time**
+```
+NICER_1200120189_nixti20170601_combined_v002.rmf
+NICER_1200120189_nixtionaxis20170601_combined_v004.arf
+```
 
-The resulting PDS from both cases were compared to understand how **time resolution influences the frequency range and power distribution**.
+- **RMF (Response Matrix File)** – detector energy redistribution
+- **ARF (Auxiliary Response File)** – effective area of the instrument
 
----
-
-## 4. Modeling the Power Spectrum
-
-The PDS was modeled to identify potential **Quasi-Periodic Oscillations (QPOs)** in the signal.
-
-The power spectrum was fitted using models such as:
-
-- Lorentzian profiles
-- Power law components
-- Constant background terms
-
-The Lorentzian model was used to characterize peaks in the PDS that correspond to QPO features. :contentReference[oaicite:1]{index=1}
+These are required for spectral modelling in **XSPEC**.
 
 ---
 
-## 5. XSPEC Modeling
+# Laboratory Sessions
 
-The PDS data was also modeled using **XSPEC**, a widely used software package for X-ray astronomy.
-
-The workflow included:
-
-1. Generating the PDS using `powspec`
-2. Converting the data into a **PHA file**
-3. Generating the response file
-4. Fitting the model spectrum in XSPEC
-
-The fitted model parameters and statistical values were recorded.
+The analysis was performed through **three lab sessions**, each focusing on a different aspect of X-ray data analysis.
 
 ---
 
-# Quasi-Periodic Oscillation (QPO)
+# Lab 1 — NICER Data Reduction
 
-From the modeled PDS, the **QPO frequency** was determined.
+Instruction file:
 
-The **significance of the QPO** is characterized using the **Q-factor**, defined as:
+```
+nicer-reduction-MS-lab-1.pdf
+```
 
-\[
-Q = \frac{\text{centroid frequency}}{\text{width of the peak}}
-\]
+Goal: convert raw NICER observations into usable scientific products.
 
-A higher Q-factor indicates a more coherent oscillation in the source.
+The following steps were performed:
+
+### Standard NICER Processing
+
+The NICER pipeline was executed using:
+
+```
+nicerl2
+```
+
+This step performs:
+
+- calibration
+- filtering
+- screening of event files
+
+The output includes:
+
+- cleaned event file
+- filter file
+- unscreened event files
+
+---
+
+### Removing Noisy Detectors
+
+Some detectors are known to have increased noise.
+
+These detectors were removed using:
+
+```
+fselect
+```
+
+Inactive detectors such as **FPM-14 and FPM-34** were excluded.
+
+---
+
+### Generating Spectrum and Light Curve
+
+Using **XSELECT**, the cleaned event file was used to generate:
+
+- source spectrum (.pha)
+- light curve (.lc)
+
+---
+
+### Response Generation
+
+Instrument responses were generated using:
+
+```
+nicerarf
+nicerrmf
+```
+
+This produced:
+
+- ARF file
+- RMF file
+
+---
+
+### Background Estimation
+
+The NICER background was generated using:
+
+```
+nibackgen3C50
+```
+
+The resulting background spectrum:
+
+```
+nibackgen3C50_bkg.pi
+```
+
+---
+
+### Spectrum Grouping
+
+The spectrum was grouped and instrument systematics were added using:
+
+```
+grppha
+```
+
+Grouping improves statistical quality and prepares the spectrum for model fitting.
+
+---
+
+# Lab 2 — Spectral Analysis
+
+Instruction file:
+
+```
+nicer-reduction-MS-lab-2.pdf
+```
+
+Goal: study the **energy spectrum of the X-ray source**.
+
+The analysis was performed using **XSPEC**.
+
+---
+
+## Loading Data in XSPEC
+
+The following files were loaded:
+
+- grouped source spectrum
+- background spectrum
+- response matrix
+- auxiliary response
+
+Example commands:
+
+```
+data spectrum.pha
+arf spectrum.arf
+resp spectrum.rmf
+back background.pi
+```
+
+---
+
+## Plotting the Spectrum
+
+The spectrum was plotted in two ways:
+
+- counts vs detector channel
+- counts vs energy (keV)
+
+The useful energy range of the data was identified by ignoring noisy channels.
+
+---
+
+## Spectral Modelling
+
+Different models were tested to understand the physical emission processes.
+
+Examples of models used:
+
+```
+powerlaw
+tbabs*powerlaw
+tbabs*diskbb
+tbabs*(diskbb+powerlaw)
+```
+
+Where:
+
+- **tbabs** → interstellar absorption
+- **diskbb** → accretion disk emission
+- **powerlaw** → high-energy coronal emission
+
+---
+
+## Model Fitting
+
+Model parameters were optimized using **chi-square minimization**.
+
+The following were evaluated:
+
+- χ² value
+- degrees of freedom
+- reduced χ²
+
+The best-fit model parameters and errors were recorded.
+
+---
+
+## Flux Estimation
+
+The X-ray flux of the source was calculated in the energy range:
+
+```
+0.8 – 10 keV
+```
+
+---
+
+# Lab 3 — Timing Analysis
+
+Instruction file:
+
+```
+nicer-reduction-MS-lab-3.pdf
+```
+
+Goal: study **temporal variability** in the X-ray emission.
+
+---
+
+## Light Curve Analysis
+
+The source light curve was generated and analyzed to determine:
+
+- minimum count rate
+- maximum count rate
+- average count rate
+
+---
+
+## Power Density Spectrum (PDS)
+
+The **Power Density Spectrum** was generated using:
+
+```
+powspec
+```
+
+The PDS represents the **Fourier transform of the light curve**, showing variability power as a function of frequency.
+
+---
+
+## Quasi-Periodic Oscillations (QPO)
+
+The PDS was modeled using **Lorentzian profiles** to identify peaks corresponding to **quasi-periodic oscillations (QPOs)**.
+
+The **Q-factor** of the oscillation was calculated:
+
+```
+Q = centroid frequency / width of the peak
+```
+
+This quantity measures the coherence of the oscillation.
 
 ---
 
 # Repository Contents
 
 ```
-README.md                         → Overview of the project
-Data Analysis Lab Kanishk.pdf     → Report containing the analysis
-nicer-reduction-MS-lab-3.pdf      → Lab manual for the timing analysis
+README.md
+
+Data Analysis Lab Kanishk.pdf
+    Final lab report and analysis results
+
+nicer-reduction-MS-lab-1.pdf
+    Lab 1 instructions: NICER data reduction
+
+nicer-reduction-MS-lab-2.pdf
+    Lab 2 instructions: spectral analysis
+
+nicer-reduction-MS-lab-3.pdf
+    Lab 3 instructions: timing analysis
+
+NICER_1200120189_nisrc_grp.pha
+nicer-final-New.pha
+    Source spectrum files
+
+NICER_1200120189_nibackgen3C50_bkg.pi
+    Background spectrum
+
+NICER_1200120189_nixti20170601_combined_v002.rmf
+    Response matrix file
+
+NICER_1200120189_nixtionaxis20170601_combined_v004.arf
+    Auxiliary response file
 ```
 
 ---
 
-# Conclusion
+# Summary
 
-This lab demonstrated the workflow used in **X-ray timing analysis of compact astrophysical sources**.
+This project demonstrates the complete workflow used in **X-ray astronomy data analysis**:
 
-Starting from a light curve of MAXI J1820+070, the analysis involved:
+1. **NICER data reduction**
+2. **spectral modelling of X-ray emission**
+3. **timing analysis and variability studies**
 
-- Studying variability in the time domain
-- Generating a **power density spectrum**
-- Investigating the effect of time binning
-- Modeling the PDS to identify **quasi-periodic oscillations**
+Using NICER observations of **MAXI J1820+070**, the analysis explores both the **spectral properties** and **temporal variability** of the accreting black hole system.
 
-These techniques are widely used in the study of **accreting black holes and neutron stars**, where variability provides insights into the physics of accretion disks and relativistic environments.
+These techniques are widely used in modern **high-energy astrophysics research**.
